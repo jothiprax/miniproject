@@ -10,7 +10,7 @@ public class DBUtil {
 	public static Connection createConnection()
 	{
 	try{
-	con=DriverManager.getConnection("jdbc:mysql://localhost:3306/21L139","root","roopika");
+	con=DriverManager.getConnection("jdbc:mysql://localhost:3306/21L139","root","ramiyasri");
 	}
 	catch(Exception e)
 	{
