@@ -8,7 +8,7 @@ public class DBUtil {
 	{
 		try
 		{
-			connection=DriverManager.getConnection("jdbc:mysql://localhost:3306/vikash","root","roopika");}
+			connection=DriverManager.getConnection("jdbc:mysql://localhost:3306/vikash","root","vikash27");}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
