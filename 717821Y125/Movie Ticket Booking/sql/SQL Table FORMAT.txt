@@ -1,0 +1,36 @@
+
+DataBase Name:jdbc
+
+1.Table Name:audience
+
+Column       Type        Null   Default Comments
+Name         varchar(40) No
+Phone_No     varchar(10) No
+Email_Id     varchar(40) No
+Movie_Name   varchar(30) No
+Show_Time    time        No
+Seats_Booked int(10)     No
+Total_Price  float(10,2) No
+
+2.Table Name:foodorders
+
+Column       Type        Null   Default Comments
+phno         varchar(10) No
+Fname        varchar(30) No
+Qty          int(10)     No
+Total_price  float(10,2) No
+
+3.Table Name:movie
+
+Column          Type        Null   Default Comments
+Screen_No       int(11)     No
+Movie_Name      varchar(30) No
+Seats_Available int(11)     No     500
+Show_Time       time        No
+
+4.Table Name:snacks
+
+Column       Type        Null   Default Comments
+Food_Name    varchar(30) No
+Type         varchar(30) No
+Price        float(10,2) No
