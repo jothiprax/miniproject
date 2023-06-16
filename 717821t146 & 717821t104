@@ -1,0 +1,313 @@
+package com.jdbc.project;
+
+public class employee {
+	private int emp_id;
+	private String emp_name;
+	private String emp_address;
+	private double emp_salary;
+	//constructor1
+	public employee(int emp_id, String emp_name, String emp_address, double emp_salary) {
+		super();
+		this.emp_id = emp_id;
+		this.emp_name = emp_name;
+		this.emp_address = emp_address;
+		this.emp_salary = emp_salary;
+	}
+	//constructor 2
+	public employee(String emp_name, String emp_address, double emp_salary) {
+		super();
+		this.emp_name = emp_name;
+		this.emp_address = emp_address;
+		this.emp_salary = emp_salary;
+	}
+	//getter and  setter
+	public int getEmp_id() {
+		return emp_id;
+	}
+	public void setEmp_id(int emp_id) {
+		this.emp_id = emp_id;
+	}
+	public String getEmp_name() {
+		return emp_name;
+	}
+	public void setEmp_name(String emp_name) {
+		this.emp_name = emp_name;
+	}
+	public String getEmp_address() {
+		return emp_address;
+	}
+	public void setEmp_address(String emp_address) {
+		this.emp_address = emp_address;
+	}
+	public double getEmp_salary() {
+		return emp_salary;
+	}
+	public void setEmp_salary(double emp_salary) {
+		this.emp_salary = emp_salary;
+	}
+}
+
+package com.jdbc.service;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import com.jdbc.project.employee;
+import com.jdbc.util.Database;
+import com.jdbc.util.Query;
+
+public class Databaseservice extends Database{
+	Database database=new Database();
+	//for insert an record
+	public void insertEmployee(employee employee)throws SQLException
+	{	
+		try(Connection connection = database.getConnection();)
+		{
+			PreparedStatement preparedStatement = connection.prepareStatement(Query.insertEmployeeQuery());
+			preparedStatement.setString(1, employee.getEmp_name());
+			preparedStatement.setString(2,employee.getEmp_address());
+			preparedStatement.setDouble((int) 3.,employee.getEmp_salary());
+			int rows = preparedStatement.executeUpdate();
+			if(rows > 0)
+			{
+				System.out.println("Record created successfully");
+				System.out.println("---------------------------------------------");
+			}
+			else
+			{
+				System.out.println("Insert record failed");
+				System.out.println("-----------------------------------------------");
+
+			}
+			
+		}
+	}
+	//to get all the records in table
+	public void getAllEmployee() throws SQLException
+	{
+		try(Connection connection = database.getConnection();
+				Statement statement = connection.createStatement();
+				ResultSet rs= statement.executeQuery(Query.selectAllEmployeeQuery());)
+		{
+			while(rs.next())
+			{
+				printEmployee(new employee(rs.getInt("employee_id"),
+						rs.getString("employee_name"),
+						rs.getString("employee_address"),
+						rs.getDouble("employee_salary")	
+						));
+			}
+		}
+	}
+	//to print all the records in table
+	public void printEmployee(com.jdbc.project.employee employee)
+	{
+		System.out.println("----------------------------------------------------");
+		System.out.println("Employee id : "+employee.getEmp_id());
+		System.out.println("Employee name : "+employee.getEmp_name());
+		System.out.println("Employee Address : "+employee.getEmp_address());
+		System.out.println("Employee Salary : "+employee.getEmp_salary());
+		System.out.println("-----------------------------------------------------");
+	}
+	//get details by using id
+	public boolean getEmployeeById(int id) throws SQLException
+	{
+		boolean i=false;
+		try(Connection connection =  database.getConnection();
+				Statement statement = connection.createStatement();
+				ResultSet rs=statement.executeQuery(Query.selectEmployeeById(id));
+				)
+		
+		{
+			if(rs.next()) {
+				i=true;
+				printEmployee(new employee(rs.getInt("employee_id"),rs.getString("employee_name"),rs.getString("employee_address"),rs.getDouble("employee_salary")));
+				System.out.println("-----------------------------------------------");
+
+			}
+			else
+			{
+				System.out.println("rocord has been not found");
+				System.out.println("-----------------------------------------------");
+
+			}
+		}
+		return i;
+	}
+	//delete an record
+	public void deleteEmployeeById(int emp_id) throws SQLException
+	{
+		try(Connection connection = database.getConnection();
+				Statement statement=connection.createStatement();
+				)
+		{
+			int rows = statement.executeUpdate(Query.deleteEmployeeById(emp_id));
+			if(rows>0)
+			{
+				System.out.println("recrod deleted successfully..!");
+				System.out.println("-----------------------------------------------");
+
+			}
+			else
+			{
+				throw new invalidinputExcepiton("you have entered an invalid id in table to delete....!");
+			}
+		}
+		catch(invalidinputExcepiton e)
+		{
+			System.out.println(e+""+e.getMessage());
+			System.out.println("-----------------------------------------------");
+		}
+	}
+	//to update an record
+	public void updateEmployee(employee employee) throws SQLException
+	{
+		try(Connection connection = database.getConnection();
+			PreparedStatement prepareStatement =	connection.prepareStatement(Query.updateEmployeeQuery(employee.getEmp_id())))
+		{
+				prepareStatement.setString(1,employee.getEmp_name());
+				prepareStatement.setString(2,employee.getEmp_address());
+				prepareStatement.setDouble(3,employee.getEmp_salary());
+				int rows=prepareStatement.executeUpdate();
+				if(rows>0)
+				{
+					System.out.println("record updated successfully...!");
+					System.out.println("------------------------------------------------");
+				}
+				else
+				{
+					System.out.println("failed to update the record..!");
+				}
+				
+		}
+		
+	}
+}
+
+
+package com.jdbc.service;
+//user defined Exception class
+public class invalidinputExcepiton extends Exception {
+	public invalidinputExcepiton(String s)
+	{
+		super(s);
+	}
+}
+
+package com.jdbc.util;
+
+import java.sql.Connection;
+
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+//connect to the database system using jdbc connection 
+public class Database {
+	public Connection getConnection() throws SQLException	{
+		String url = "jdbc:mysql://localhost:3306/database";
+		String username = "root";
+		String password = "password@123";
+		return DriverManager.getConnection(url,username,password);
+		
+}
+}
+
+package com.jdbc.util;
+
+public class Query {
+	//queries for the CRUD operations
+	public static String insertEmployeeQuery()
+	{
+		return "insert into employee (employee_name,employee_address,employee_salary) values(?,?,?)";
+	}
+	public static  String selectAllEmployeeQuery()
+	{
+		return "select * from employee";
+	}
+	public static String selectEmployeeById(int emp_id)
+	{
+		return "select * from employee where  employee_id = "+emp_id;
+	}
+	public static String deleteEmployeeById(int emp_id)
+	{
+		return "delete from employee where employee_id = "+emp_id ;
+	}
+	public static String updateEmployeeQuery(int emp_id)
+	{
+		return "update employee set employee_name = ? , employee_address = ? , employee_salary = ? where employee_id = "+emp_id;
+	}
+}
+
+package com.jdbc.main;
+
+import java.sql.SQLException;
+import java.util.Scanner;
+
+import com.jdbc.project.employee;
+import com.jdbc.service.Databaseservice;
+//main class
+public class Mainclass {
+	 static Databaseservice databaseservice= new Databaseservice();
+	public static void main(String[] args) throws SQLException {
+		try(Scanner sc = new Scanner(System.in);)
+		{
+			boolean b=true;
+			while(b)
+			{
+				System.out.println("Enter The Choice :");
+				System.out.println("1.INSERT");
+				System.out.println("2.SELECT ALL");
+				System.out.println("3.SELECT EMPLOYEE BY AN EMP_ID");	
+				System.out.println("4.DELETE EMPLOYEE");
+				System.out.println("5.UPDATE EMPLLOYEE");
+				System.out.println("6.EXIT");
+				int choice=	Integer.parseInt(sc.nextLine());
+				switch(choice)
+				{
+				case 1:
+					System.out.println("Enter name,place,salary");
+					
+					databaseservice.insertEmployee(new employee( sc.nextLine(),sc.nextLine(),Double.parseDouble(sc.nextLine())));
+					break;
+				case 2:
+					databaseservice.getAllEmployee();
+					break;
+				case 3:
+					System.out.println("Enter the ID :");
+					databaseservice.getEmployeeById(Integer.parseInt(sc.nextLine()));
+					break;
+				case 4:
+					System.out.println("enter the id :");
+					databaseservice.deleteEmployeeById(Integer.parseInt(sc.nextLine()));
+					break;
+				case 5:
+					System.out.println("enter the id of an employee : ");
+					int updateid = Integer.parseInt(sc.nextLine());
+					boolean i = databaseservice.getEmployeeById(updateid);
+					if(i) {
+					System.out.println("enter name ,address,salary");
+					employee employee=new employee(updateid,sc.nextLine(),sc.nextLine(),Double.parseDouble(sc.nextLine()));
+						databaseservice.updateEmployee(employee);
+					}
+					break;
+				case 6:
+					b=false;
+					System.out.println("Thank You..! Visit Again..!");
+					break;
+				default:
+					System.out.println("Incorrect");
+					break;
+			}
+
+			}
+		}
+		catch(Exception e)
+		{
+			System.out.println(e);
+		}
+		}
+}
+
