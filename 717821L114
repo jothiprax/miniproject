@@ -1,0 +1,387 @@
+RESORT MANAGEMENT SYSTEM 
+GUEST
+package com.kce.bean;
+public class Guest {
+private int id;
+private String name;
+private String email;
+public Guest(int id, String name, String email) {
+super();
+this.id = id;
+this.name = name;
+this.email = email;
+}
+public int getId() {
+return id;
+}
+public void setId(int id) {
+this.id = id;
+}
+public String getName() {
+return name;
+}
+public void setName(String name) {
+this.name = name;
+}
+public String getEmail() {
+return email;
+}
+public void setEmail(String email) {
+this.email = email;
+}
+}
+RESORT
+package com.kce.bean;
+public class Resort {
+ public Resort(int id, String name, String location) {
+super();
+this.id = id;
+this.name = name;
+this.location = location;
+}
+private int id;
+ private String name;
+ private String location;
+public int getId() {
+return id;
+}
+public void setId(int id) {
+this.id = id;
+}
+public String getName() {
+return name;
+}
+public void setName(String name) {
+this.name = name;
+}
+public String getLocation() {
+return location;
+}
+public void setLocation(String location) {
+this.location = location;
+}
+}
+EXCEPTION HANDLING
+package com.kce.bean;
+public class ResortManagementException extends Exception {
+ public ResortManagementException(String message) {
+ super(message);
+ }
+}
+DAO
+GUESTDAO
+package com.kce.dao;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import com.kce.bean.Guest;
+public class GuestDAO {
+private Connection connection;
+ public GuestDAO(Connection connection) {
+ this.connection = connection;
+ }
+ public void createGuest(Guest guest) throws SQLException {
+ String query = "INSERT INTO guests (name, email) VALUES (?, ?)";
+ try (PreparedStatement statement = connection.prepareStatement(query)) {
+ statement.setString(1, guest.getName());
+ statement.setString(2, guest.getEmail());
+ statement.executeUpdate();
+ }
+ }
+ public Guest getGuestById(int id) throws SQLException {
+ String query = "SELECT * FROM guests WHERE id = ?";
+ try (PreparedStatement statement = connection.prepareStatement(query)) {
+ statement.setInt(1, id);
+ try (ResultSet resultSet = statement.executeQuery()) {
+ if (resultSet.next()) {
+ String name = resultSet.getString("name");
+ String email = resultSet.getString("email");
+ return new Guest(id, name, email);
+ }
+ }
+ }
+ return null; // Guest not found
+ }
+ public List<Guest> getAllGuests() throws SQLException {
+ List<Guest> guests = new ArrayList<>();
+ String query = "SELECT * FROM guests";
+ try (PreparedStatement statement = connection.prepareStatement(query);
+ ResultSet resultSet = statement.executeQuery()) {
+ while (resultSet.next()) {
+ int id = resultSet.getInt("id");
+ String name = resultSet.getString("name");
+ String email = resultSet.getString("email");
+ guests.add(new Guest(id, name, email));
+ }
+ }
+ return guests;
+ }
+ public void updateGuest(Guest guest) throws SQLException {
+ String query = "UPDATE guests SET name = ?, email = ? WHERE id = ?";
+ try (PreparedStatement statement = connection.prepareStatement(query)) {
+ statement.setString(1, guest.getName());
+ statement.setString(2, guest.getEmail());
+ statement.setInt(3, guest.getId());
+ statement.executeUpdate();
+ }
+ }
+ public void deleteGuest(int id) throws SQLException {
+ String query = "DELETE FROM guests WHERE id = ?";
+ try (PreparedStatement statement = connection.prepareStatement(query)) {
+ statement.setInt(1, id);
+ statement.executeUpdate();
+ }
+ }
+}
+RESORTDAO
+package com.kce.dao;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import com.kce.bean.Resort;
+public class ResortDAO {
+ private Connection connection;
+ public ResortDAO() throws SQLException {
+ // Establishing database connection
+ connection = 
+DriverManager.getConnection("jdbc:mysql://localhost:3306/fun","reosrt_db","jerin");
+ }
+ // CRUD operations using prepared statement
+ public void createResort(Resort resort) throws SQLException {
+ String sql = "INSERT INTO resorts (id, name, location) VALUES (?, ?, ?)";
+ PreparedStatement statement = connection.prepareStatement(sql);
+ statement.setInt(1, resort.getId());
+ statement.setString(2, resort.getName());
+ statement.setString(3, resort.getLocation());
+ statement.executeUpdate();
+ }
+ public void updateResort(Resort resort) throws SQLException {
+ String sql = "UPDATE resorts SET name = ?, location = ? WHERE id = ?";
+ PreparedStatement statement = connection.prepareStatement(sql);
+ statement.setString(1, resort.getName());
+ statement.setString(2, resort.getLocation());
+ statement.setInt(3, resort.getId());
+ statement.executeUpdate();
+ }
+ public void deleteResort(int id) throws SQLException {
+ String sql = "DELETE FROM resorts WHERE id = ?";
+ PreparedStatement statement = connection.prepareStatement(sql);
+ statement.setInt(1, id);
+ statement.executeUpdate();
+ }
+ public Resort getResortById(int id) throws SQLException {
+ String sql = "SELECT * FROM resorts WHERE id = ?";
+ PreparedStatement statement = connection.prepareStatement(sql);
+ statement.setInt(1, id);
+ ResultSet resultSet = statement.executeQuery();
+ if (resultSet.next()) {
+ String name = resultSet.getString("name");
+ String location = resultSet.getString("location");
+ return new Resort(id, name, location);
+ }
+ return null;
+ }
+}
+MAIN CLASS
+package com.kce.util;
+import com.kce.bean.*;
+import com.kce.*;
+import com.kce.dao.*;
+import java.util.*;
+public class Main {
+ private static Scanner sc = new Scanner(System.in);
+ private static Scanner sc1 = new Scanner(System.in);
+ private static List<Resort> resorts = new ArrayList<>();
+ private static List<Guest> guests = new ArrayList<>();
+ public static void main(String args[]) {
+ System.out.println("Resort management system");
+ System.out.println();
+ int repeat;
+ do {
+ System.out.println("If you want to manage guests, press 1");
+ System.out.println("If you want to manage resorts, press 2");
+ int mainChoice = sc.nextInt();
+ if (mainChoice == 1) {
+ System.out.println("If you want to create a new guest, press 1");
+ System.out.println("If you want to view a particular guest, press 2");
+ System.out.println("If you want to view all guests, press 3");
+ System.out.println("If you want to update an existing guest, press 4");
+ System.out.println("If you want to delete a guest, press 5");
+ int guestChoice = sc.nextInt();
+ if (guestChoice == 1)
+ createGuest();
+ else if (guestChoice == 2)
+ particularGuest();
+ else if (guestChoice == 3)
+ allGuests();
+ else if (guestChoice == 4)
+ updateGuest();
+ else
+ deleteGuest();
+ } else {
+ System.out.println("If you want to create a new resort, press 1");
+ System.out.println("If you want to update an existing resort, press 2");
+ System.out.println("If you want to delete an existing resort, press 3");
+ System.out.println("If you want to view a resort, press 4");
+ int resortChoice = sc.nextInt();
+ if (resortChoice == 1)
+ createResort();
+ else if (resortChoice == 2)
+ updateResort();
+ else if (resortChoice == 3)
+ deleteResort();
+ else
+ getResort();
+ }
+ System.out.println("Do you want to continue your work? Press 1 for Yes, 0 for No");
+ repeat = sc.nextInt();
+ } while (repeat == 1);
+ }
+ public static void createResort() {
+ System.out.println("Enter the resort id");
+ int id = sc.nextInt();
+ System.out.println("Enter the resort name");
+ String name = sc1.nextLine();
+ System.out.println("Enter the resort location");
+ String location = sc1.nextLine();
+ Resort resort = new Resort(id, name, location);
+ resorts.add(resort);
+ System.out.println("Resort created successfully!");
+ }
+ public static void updateResort() {
+ System.out.println("Enter the resort id");
+ int id = sc.nextInt();
+ Resort resort = findResortById(id);
+ if (resort != null) {
+ System.out.println("Enter the new resort name");
+ String name = sc1.nextLine();
+ System.out.println("Enter the new resort location");
+ String location = sc1.nextLine();
+ resort.setName(name);
+ resort.setLocation(location);
+ System.out.println("Resort updated successfully!");
+ } else {
+ System.out.println("Resort not found!");
+ }
+ }
+ public static void deleteResort() {
+ System.out.println("Enter the resort id");
+ int id = sc.nextInt();
+ Resort resort = findResortById(id);
+ if (resort != null) {
+ resorts.remove(resort);
+ System.out.println("Resort deleted successfully!");
+ } else {
+ System.out.println("Resort not found!");
+ }
+ }
+ public static void getResort() {
+ System.out.println("Enter the resort id");
+ int id = sc.nextInt();
+ Resort resort = findResortById(id);
+ if (resort != null) {
+ System.out.println("Resort ID: " + resort.getId());
+ System.out.println("Resort Name: " + resort.getName());
+ System.out.println("Resort Location: " + resort.getLocation());
+ } else {
+ System.out.println("Resort not found!");
+ }
+ }
+ public static void createGuest() {
+ System.out.println("Enter the guest id");
+ int id = sc.nextInt();
+ System.out.println("Enter the guest name");
+ String name = sc1.nextLine();
+ System.out.println("Enter the guest email");
+ String email = sc1.nextLine();
+ Guest guest = new Guest(id, name, email);
+ guests.add(guest);
+ System.out.println("Guest created successfully!");
+ }
+ public static void particularGuest() {
+ System.out.println("Enter the guest id");
+ int id = sc.nextInt();
+ Guest guest = findGuestById(id);
+ if (guest != null) {
+ System.out.println("Guest ID: " + guest.getId());
+ System.out.println("Guest Name: " + guest.getName());
+ System.out.println("Guest Email: " + guest.getEmail());
+ } else {
+ System.out.println("Guest not found!");
+ }
+ }
+ public static void allGuests() {
+ System.out.println("List of all guests:");
+ for (Guest guest : guests) {
+ System.out.println("Guest ID: " + guest.getId());
+ System.out.println("Guest Name: " + guest.getName());
+ System.out.println("Guest Email: " + guest.getEmail());
+ }
+ }
+ public static void updateGuest() {
+ System.out.println("Enter the guest id");
+ int id = sc.nextInt();
+ Guest guest = findGuestById(id);
+ if (guest != null) {
+ System.out.println("Enter the new guest name");
+ String name = sc1.nextLine();
+ System.out.println("Enter the new guest email");
+ String email = sc1.nextLine();
+ guest.setName(name);
+ guest.setEmail(email);
+ System.out.println("Guest updated successfully!");
+ } else {
+ System.out.println("Guest not found!");
+ }
+ }
+ public static void deleteGuest() {
+ System.out.println("Enter the guest id");
+ int id = sc.nextInt();
+ Guest guest = findGuestById(id);
+ if (guest != null) {
+ guests.remove(guest);
+ System.out.println("Guest deleted successfully!");
+ } else {
+ System.out.println("Guest not found!");
+ }
+ }
+ private static Resort findResortById(int id) {
+ for (Resort resort : resorts) {
+ if (resort.getId() == id) {
+ return resort;
+ }
+ }
+ return null;
+ }
+ private static Guest findGuestById(int id) {
+ for (Guest guest : guests) {
+ if (guest.getId() == id) {
+ return guest;
+ }
+ }
+ return null;
+ }
+}
+DATABASE CONNECTION:
+package com.kce.util;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+public class DBConnectivity {
+public static void main(String[] args) {
+try {
+Class.forName("com.mysql.cj.jdbc.Driver");
+Connection 
+con=DriverManager.getConnection("jdbc:mysql://localhost:3306/resort_db","root","jerin
+");
+Statement st=con.createStatement();
+}catch(Exception e) {
+System.out.println(e);
+}
+}
+}
