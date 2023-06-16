@@ -1,0 +1,166 @@
+package com.kce.bean;
+
+import java.sql.*;
+import java.util.Scanner;
+
+// Custom exception for invalid attendance
+class InvalidAttendanceException extends Exception {
+    public InvalidAttendanceException(String message) {
+        super(message);
+    }
+}
+
+package com.kce.bean; 
+
+// Main class
+public class SchoolAttendanceManagementSystem {
+    // Database connection parameters
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/school";
+    private static final String USERNAME = "your_username";
+    private static final String PASSWORD = "your_password";
+
+    // Database table and column names
+    private static final String TABLE_NAME = "students";
+    private static final String COLUMN_ID = "id";
+    private static final String COLUMN_NAME = "name";
+    private static final String COLUMN_ATTENDANCE = "attendance";
+
+    // CRUD operations
+    private static final int CREATE = 1;
+    private static final int READ = 2;
+    private static final int UPDATE = 3;
+    private static final int DELETE = 4;
+
+    // Utility method to establish a database connection
+    private static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+    }
+
+    // Method to create a new student record
+    private static void createStudent() {
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "INSERT INTO " + TABLE_NAME + "(" + COLUMN_NAME + ", " + COLUMN_ATTENDANCE + ") VALUES (?, ?)"
+             )) {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Enter student name: ");
+            String name = scanner.nextLine();
+            System.out.println("Enter attendance percentage: ");
+            int attendance = scanner.nextInt();
+
+            stmt.setString(1, name);
+            stmt.setInt(2, attendance);
+
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Student record created successfully!");
+            } else {
+                System.out.println("Failed to create student record.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error creating student record: " + e.getMessage());
+        }
+    }
+
+    // Method to read student records
+    private static void readStudents() {
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT * FROM " + TABLE_NAME)) {
+            while (rs.next()) {
+                int id = rs.getInt(COLUMN_ID);
+                String name = rs.getString(COLUMN_NAME);
+                int attendance = rs.getInt(COLUMN_ATTENDANCE);
+                System.out.println("ID: " + id + ", Name: " + name + ", Attendance: " + attendance);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error reading student records: " + e.getMessage());
+        }
+    }
+
+    // Method to update a student's attendance
+    private static void updateAttendance() {
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "UPDATE " + TABLE_NAME + " SET " + COLUMN_ATTENDANCE + " = ? WHERE " + COLUMN_ID + " = ?"
+             )) {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Enter student ID: ");
+            int id = scanner.nextInt();
+            System.out.println("Enter new attendance percentage: ");
+            int attendance = scanner.nextInt();
+
+            stmt.setInt(1, attendance);
+            stmt.setInt(2, id);
+
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Attendance updated successfully!");
+            } else {
+                System.out.println("Failed to update attendance. Invalid student ID.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error updating attendance: " + e.getMessage());
+        }
+    }
+
+    // Method to delete a student record
+    private static void deleteStudent() {
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "DELETE FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + " = ?"
+             )) {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Enter student ID: ");
+            int id = scanner.nextInt();
+
+            stmt.setInt(1, id);
+
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Student record deleted successfully!");
+            } else {
+                System.out.println("Failed to delete student record. Invalid student ID.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error deleting student record: " + e.getMessage());
+        }
+    }
+
+    // Main method
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println("------ School Attendance Management System ------");
+            System.out.println("1. Create student record");
+            System.out.println("2. Read student records");
+            System.out.println("3. Update attendance");
+            System.out.println("4. Delete student record");
+            System.out.println("5. Exit");
+            System.out.println("Enter your choice: ");
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case CREATE:
+                    createStudent();
+                    break;
+                case READ:
+                    readStudents();
+                    break;
+                case UPDATE:
+                    updateAttendance();
+                    break;
+                case DELETE:
+                    deleteStudent();
+                    break;
+                case 5:
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        } while (choice != 5);
+    }
+}
