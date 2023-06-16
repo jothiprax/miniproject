@@ -1,6 +1,6 @@
 package com.kce.bean;
 
-//import java.util.Date;
+
 
 public class BorrowerDetails {
 	private int Borrowerid;
