@@ -1,12 +1,12 @@
 package com.kce.service;
 
 import java.sql.SQLException;
-//import java.util.Date;
+
 import java.util.Scanner;
-//import com.kce.service.Borrower;
+
 import com.kce.Dao.BookDetailsDAO;
 import com.kce.Dao.BorrowerDetailsDAO;
-//import com.kce.Dao.OverdueException;
+import com.kce.Dao.OverdueException;
 import com.kce.bean.BorrowerDetails;
 
 public class Main {
