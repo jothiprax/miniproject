@@ -1,0 +1,97 @@
+Package demo _Program;
+
+import java.util.ArrayList;
+import java.util.*;
+
+class CateringService {
+private String name;
+private String description;
+private List<String> menuItems;
+
+public CateringService(String name, String description) {
+this.name = name;
+this.description = description;
+this.menuItems = new ArrayList<>();
+}
+
+public String getName() {
+return name;
+}
+
+public String getDescription() {
+return description;
+}
+
+public List<String> getMenuItems() {
+return menuItems;
+}
+
+public void addMenuItem(String menuItem) {
+menuItems.add(menuItem);
+}
+}
+
+class CateringOrder {
+private CateringService cateringService;
+private List<String> selectedItems;
+
+public CateringOrder(CateringService cateringService) {
+this.cateringService = cateringService;
+this.selectedItems = new ArrayList<>();
+}
+
+public void addItemToOrder(String item) {
+selectedItems.add(item);
+}
+
+public void removeItemFromOrder(String item) {
+selectedItems.remove(item);
+}
+
+public void displayOrder() {
+System.out.println("Catering Order Details:");
+System.out.println("Catering Service: " + cateringService.getName());
+System.out.println("Description: " + cateringService.getDescription());
+
+System.out.println("Selected Items:");
+for (String item : selectedItems) {
+System.out.println("- " + item);
+}
+}
+}
+
+public class CateringOrderApp {
+public static void main(String[] args) {
+// Create catering services
+CateringService service1 = new CateringService("ABC Catering", "Delicious and diverse menu
+options");
+service1.addMenuItem("Chicken Biryani");
+service1.addMenuItem("Paneer Tikka");
+service1.addMenuItem("Gulab Jamun");
+
+CateringService service2 = new CateringService("XYZ Catering", "Exquisite gourmet cuisine");
+service2.addMenuItem("Grilled Salmon");
+service2.addMenuItem("Truffle Risotto");
+service2.addMenuItem("Chocolate Mousse");
+
+// Create a catering order
+CateringOrder order = new CateringOrder(service1);
+
+// Add items to the order
+order.addItemToOrder("Chicken Biryani");
+order.addItemToOrder("Gulab Jamun");
+
+// Display the order details
+order.displayOrder();
+}
+}
+
+Output
+Catering Order Details:
+Catering Service: ABC Catering
+Description: Delicious and diverse menu options
+Selected Items:
+- Chicken Biryani
+- Gulab Jamun
+
+
