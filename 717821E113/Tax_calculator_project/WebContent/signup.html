@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Tax Calculator</title>
+<link rel="stylesheet" type="text/css" href="css/styles.css">
+<style>
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f6f8fa;
+	text-align: center;
+	padding-top: 100px;
+}
+
+h1 {
+	color: #24292e;
+	font-size: 36px;
+}
+
+form {
+	margin-top: 40px;
+	max-width: 300px;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #fff;
+	padding: 50px;
+	border: 1px solid #e1e4e8;
+	border-radius: 6px;
+	box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+	display: block;
+	text-align: left;
+	margin-bottom: 5px;
+	font-weight: bold;
+	color: #24292e;
+}
+
+input[type="text"], input[type="password"], input[type="email"] {
+	width: 100%;
+	padding: 10px;
+	font-size: 16px;
+	border: 1px solid #e1e4e8;
+	border-radius: 6px;
+	margin-bottom: 20px;
+}
+
+input[type="submit"] {
+	display: block;
+	width: 100%;
+	padding: 10px;
+	font-size: 16px;
+	color: #fff;
+	background-color: #24292e;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+}
+
+input[type="submit"]:hover {
+	background-color: #0366d6;
+}
+</style>
+</head>
+<body>
+	<h1>Tax Calculator</h1>
+	<form action="signup" method="post">
+
+		<div>
+			<label for="username">Username:</label> <input type="text"
+				id="username" name="username" required>
+		</div>
+
+		<div>
+			<label for="email">Email:</label> <input type="email" id="email"
+				name="email" required>
+		</div>
+		<div>
+			<label for="password">Password:</label> <input type="password"
+				id="password" name="password" required>
+		</div>
+		<input type="submit" value="Sign up">
+
+	</form>
+</body>
+</html>
+
