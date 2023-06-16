@@ -1,3 +1,3 @@
-# 717821Y124,717821Y145
+# mini project
 this repo contains the project data
 
