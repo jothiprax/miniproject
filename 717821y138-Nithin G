@@ -1,0 +1,60 @@
+import java.util.*;
+import java.sql.*;
+
+class BookingException extends Exception {
+    public BookingException(String message) {
+        super(message);
+    }
+}
+
+
+class HotelBookingSystem {
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/hotel_bookings";
+    private static final String DB_USERNAME = "root";
+    private static final String DB_PASSWORD = "Daddy@39";
+
+   
+    public void bookRoom(String guestName, int roomNumber) throws BookingException {
+        if (!isRoomAvailable(roomNumber)) {
+            throw new BookingException("Room " + roomNumber + " is already booked.");
+        }
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
+            String query = "INSERT INTO bookings (guest_name, room_number) VALUES (?, ?)";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, guestName);
+            stmt.setInt(2, roomNumber);
+            stmt.executeUpdate();
+            System.out.println("Room " + roomNumber + " booked successfully for " + guestName + ".");
+        } catch (SQLException e) {
+            throw new BookingException("An error occurred while booking the room.");
+        }
+    }
+
+    private boolean isRoomAvailable(int roomNumber) throws BookingException {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
+            String query = "SELECT * FROM bookings WHERE room_number = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, roomNumber);
+            ResultSet rs = stmt.executeQuery();
+            return !rs.next(); 
+        } catch (SQLException e) {
+            throw new BookingException("An error occurred while checking room availability.");
+        }
+    }
+}
+
+public class HotelBookingApp {
+    public static void main(String[] args) {
+        HotelBookingSystem bookingSystem = new HotelBookingSystem();
+        
+        try {
+            // Example bookings
+            bookingSystem.bookRoom("John Doe", 101);
+            bookingSystem.bookRoom("Jane Smith", 102);
+            bookingSystem.bookRoom("Alice Johnson", 101);
+        } catch (BookingException e) {
+            System.out.println("Booking failed: " + e.getMessage());
+        }
+    }
+}
