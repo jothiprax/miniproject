@@ -1,8 +1,7 @@
 
 package com.kce.Dao;
 import com.kce.bean.BookDetails;
-//import com.kce.bean.BorrowerDetails;
-//import com.kce.util.DButil;
+
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,10 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 class OverdueException extends Exception {
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -6381575198545467471L;
 
 	public OverdueException(String message) {
         super(message);
@@ -23,7 +18,7 @@ class OverdueException extends Exception {
 
 public class BookDetailsDAO {
 	static Scanner sc = new Scanner(System.in);
-	//private static BookDetailsDAO lrate;
+
 
 	public static void insert(int a) throws ClassNotFoundException {
 		try {
@@ -37,7 +32,7 @@ public class BookDetailsDAO {
 				String author = sc.next();
 				System.out.println("Enter the rate: ");
 				double rate = sc.nextInt();
-	//double lrate=ratenotindue(rate);
+	
 				arr[i] = new BookDetails(bookid, bookname,author,rate);
 			}
 			Class.forName("com.mysql.jdbc.Driver");
@@ -60,14 +55,7 @@ public class BookDetailsDAO {
 	
 
 
-/*	private static lrate ratenotindue(rate) throws OverdueException {
-		try {
-			return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-		} catch (DateTimeParseException e) {
-			throw new InvalidDateException("Invalid date format. Please enter the date in the format DD/MM/YYYY.");
-		}
-	}
-*/
+
 	public static void update() throws ClassNotFoundException {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -120,7 +108,7 @@ public class BookDetailsDAO {
 			System.out.println("Book Details:");
 			System.out.println("---------------------------------------------------------------------------------------------------------------------------");
 			System.out.printf("| %-20s | %-20s | %-20s | %-20s |%n", "BookId", "BookName", "Author","rate");
-			System.out.println("---------------------------------------------------------------------------------------------------------------------------");
+			
 			while (rs.next()) {
 
 				System.out.printf("| %-20s | %-20s | %-20s | %-20s |%n",rs.getInt(1),rs.getString(2),rs.getString(3),rs.getDouble(4));
