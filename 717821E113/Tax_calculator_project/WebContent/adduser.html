@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Calculate Tax</title>
+<style>
+body {
+	font-family: Arial, sans-serif;
+	margin: 20px;
+	background-color: #f6f8fa;
+}
+
+h1 {
+	text-align: center;
+	color: #24292e;
+}
+
+form {
+	width: 300px;
+	margin: 0 auto;
+	background-color: #fff;
+	padding: 20px;
+	border: 1px solid #e1e4e8;
+	border-radius: 6px;
+	box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+	display: block;
+	margin-top: 10px;
+	color: #24292e;
+}
+
+select, input[type="text"], input[type="number"] {
+	width: 92.5%;
+	padding: 10px;
+	font-size: 16px;
+	border: 1px solid #e1e4e8;
+	border-radius: 6px;
+	margin-top: 5px;
+}
+
+input[type="submit"] {
+	width: 100%;
+	padding: 10px;
+	font-size: 16px;
+	color: #fff;
+	background-color: #28a745;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	margin-top: 10px;
+}
+
+.message {
+	margin-top: 10px;
+	text-align: center;
+	color: red;
+}
+</style>
+<body>
+	<h1>Calculate Tax</h1>
+
+	<form action="users" method="post">
+
+		<div>
+			<label for="assessment-year">Assessment Year:</label> <select
+				id="assessment-year" name="assessment-year" required>
+				<option value="" selected disabled>Select Assessment Year</option>
+				<option value="2023-2024">2023-2024</option>
+				<option value="2022-2023">2022-2023</option>
+				<option value="2023-2024">2021-2022</option>
+				<option value="2022-2023">2020-2021</option>
+				<option value="2023-2024">2019-2020</option>
+				<option value="2022-2023">2018-2019</option>
+				<option value="2023-2024">2017-2018</option>
+				<option value="2022-2023">2016-2017</option>
+
+			</select>
+		</div>
+		<div>
+			<label for="taxpayer">Taxpayer:</label> <select id="taxpayer"
+				name="taxpayer" required>
+				<option value="" selected disabled>Select Taxpayer</option>
+				<option value="Individual">Individual</option>
+				<option value="Company">Company</option>
+			</select>
+		</div>
+		<div>
+			<label for="male/female/seniorcitizen">Male/Female/Senior
+				citizen:</label> <select id="male/female/seniorcitizen"
+				name="male/female/seniorcitizen" required>
+				<option value="" selected disabled>Select</option>
+				<option value="Male">Male</option>
+				<option value="Female">Female</option>
+				<option value="Senior_citizen">Senior citizen</option>
+				<option value="Senior_citizen">Super senior citizen</option>
+			</select>
+		</div>
+		<div>
+			<label for="residential-status">Residential Status:</label> <select
+				id="residential-status" name="residential-status" required>
+				<option value="" selected disabled>Select Residential
+					Status</option>
+				<option value="Resident">Resident</option>
+				<option value="Non-Resident">Non-Resident</option>
+				<option value="Resident_but_Not_Ordinarily_Resident">Resident
+					but Not Ordinarily Resident</option>
+			</select>
+		</div>
+
+		<div>
+			<label for="taxable-income">Taxable Income:</label> <input
+				type="text" id="taxable-income" name="taxable-income" required>
+		</div>
+
+
+		<input type="submit" name="oldreg" value="Old Regime"> <input
+			type="submit" name="newreg" value="New Regime">
+	</form>
+
+</body>
+</html>
