@@ -1,0 +1,175 @@
+package  com.kce.bean;
+import studentdatabaseapp.Student;
+import studentdatabaseapp.ConsOverload;
+import studentdatabaseapp.overriding;
+import java.util.Scanner;
+import java.util.io*;
+public class StudentDatabase{
+
+  public static void main (String[]args) {
+
+  char welcome[]={'W','e','l','c','o','m','e'}; 
+  String welStrng = new String(welcome); 
+  System.out.println("\t\t" + welStrng);
+    ConsOverload a = new ConsOverload("\t\tStudent");
+    ConsOverload b = new ConsOverload();
+    a.printName();
+    b.printName();
+  overriding ov = new overriding();
+  ov.myMethod();
+  System.out.print("Enter number of new students to enroll: ");
+  Scanner in = new Scanner(System.in);
+  int numOfStudents = in.nextInt();
+  Student[] students = new Student[numOfStudents];
+  for (int n = 0; n < numOfStudents; n++) {
+   students[n] = new Student();
+   students[n].enroll();
+   students[n].totalpay();
+   students[n].payTuition();
+      System.out.println(students[n].toString());
+}
+}
+}
+package studentdatabase;
+import java.util.Scanner;
+
+public class Student {
+  private String firstName;
+  private String lastName;
+  private int semester;
+  private String paymentID;
+  private String courses = null;
+  private int tuitionBalance = 500;
+  private static int costOfCourse = 600;
+  private static int id = 1000;
+
+
+  public Student(){   
+int x = 1;    
+ do{    
+try{    
+    Scanner in = new Scanner(System.in);
+    System.out.print("Enter student first name: ");
+    this.firstName = in.nextLine();
+
+    System.out.print("Enter student last name: ");
+    this.lastName = in.nextLine();
+
+    System.out.println("----------------------------------------");
+    System.out.print("1 - Semester 1\n2 - Semester 2\n3 - Semester 3\n4 - Semester 4\n5 - Semester 5\nEnter your semester: ");
+    this.semester = in.nextInt();   
+
+    System.out.println("----------------------------------------");
+    setStudentID();
+  x=2;   
+
+}
+catch(Exception e){    
+   System.out.println("\n\tOops! Wrong input. PleaseTry Again\n");
+}
+}while(x==1);   
+}
+       private void setStudentID() {
+       id++;
+       this.paymentID = semester + "" + id;
+       }
+  public void enroll() {
+      do {
+         System.out.print("Enter course to enroll (Q to quit when finish.): ");
+         Scanner in = new Scanner(System.in);
+         String course = in.nextLine();
+         if (!course.equals("q")) {
+         courses = courses + "\n " + course;
+         tuitionBalance = tuitionBalance + costOfCourse;
+         }
+    else {
+         break;
+         }
+         } while (1 != 0);
+   System.out.println("----------------------------------------");
+   System.out.println("\n");
+   System.out.println("*****************************************");
+}
+
+   public void totalpay(){
+   int totPayment = 0;
+   totPayment = tuitionBalance - 500;
+   System.out.println("Total payment for the courses is: RM" + totPayment);
+   System.out.println("*****************************************");
+   }
+        public void viewBalance(){
+        System.out.println("Your current account balance: RM" + tuitionBalance);
+        }
+  public void payTuition() {
+
+int x = 1;
+do{
+
+     try{    
+         viewBalance();    
+         System.out.print("Enter your payment: RM");
+         Scanner in = new Scanner(System.in);
+         int payment = in.nextInt();
+         tuitionBalance = tuitionBalance - payment;
+         System.out.print("\n");
+         System.out.println("----------------------------------------");
+         System.out.println("Thank you for your payment of RM" + payment);
+         viewBalance();
+
+         x=2;   
+         }
+         catch(Exception e){   
+                            System.out.println("\n\tOops! Wrong input. PleaseTry Again\n");
+                           }
+}while(x==1);
+}
+  public String toString(){
+   return "Name: " + firstName + " " + lastName +
+          "\nSemester: " + semester +
+          "\nReceipt ID: " + paymentID +
+          "\nCourses Enrolled:" + courses +
+          "\nBalance: RM" + tuitionBalance +
+          "\n----------------------------------------";
+          }
+}
+
+
+
+package studentdatabase;
+
+public class overriding{
+   public void myMethod()
+   {
+  System.out.println("***************************************************");
+   }	   
+}
+
+
+class Demo extends overriding{
+   public void myMethod(){
+  //Super keyword
+  super.myMethod();
+   }
+}
+package studentdatabase;
+public class ConsOverload{
+  private String name;
+
+  public ConsOverload(String n){
+    name = n;
+  }
+  public ConsOverload(){
+    name = "\t\tEnrollment App";
+  }
+
+  public void printName(){
+    System.out.println(name);
+  }
+}
+
+
+
+
+   
+
+  
