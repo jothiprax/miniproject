@@ -17,6 +17,13 @@ public class Main extends Choose {
 		Customer c1=new Customer();
 		c1.display();
 	   }
+	   else if(choose==3) {
+			Selection w=new Selection();
+			w.Dispaly();
+		   }
+	   else {
+		   System.out.println("Enter Invalid Input");
+	   }
 	   }
 	catch(Exception e){
 		System.out.println(e);
