@@ -1,0 +1,86 @@
+import java.sql.*;
+
+
+class Medicine {
+    protected String name;
+    protected int quantity;
+
+    public Medicine(String name, int quantity) {
+        this.name = name;
+        this.quantity = quantity;
+    }
+
+    public void sell(int amount) throws StockShortageException {
+        if (amount > quantity) {
+            throw new StockShortageException(name + " is out of stock!");
+        }
+        quantity -= amount;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+}
+class Antibiotic extends Medicine {
+    private String strength;
+
+    public Antibiotic(String name, int quantity, String strength) {
+        super(name, quantity);
+        this.strength = strength;
+    }
+
+    public String getStrength() {
+        return strength;
+    }
+}
+
+
+class StockShortageException extends Exception {
+    public StockShortageException(String message) {
+        super(message);
+    }
+}
+
+
+public class MedicalStore {
+    public static void main(String[] args) {
+        try {
+            
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/medical_store", "username", "password");
+
+            
+            Statement statement = connection.createStatement();
+
+            
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS medicines (name VARCHAR(100), quantity INT)");
+
+            
+            Antibiotic amoxicillin = new Antibiotic("Amoxicillin", 50, "500mg");
+            Medicine paracetamol = new Medicine("Paracetamol", 100);
+
+            
+            statement.executeUpdate("INSERT INTO medicines VALUES ('" + amoxicillin.getName() + "', " + amoxicillin.getQuantity() + ")");
+            statement.executeUpdate("INSERT INTO medicines VALUES ('" + paracetamol.getName() + "', " + paracetamol.getQuantity() + ")");
+
+            
+            amoxicillin.sell(10);
+            paracetamol.sell(20);
+
+            
+            statement.executeUpdate("UPDATE medicines SET quantity = " + amoxicillin.getQuantity() + " WHERE name = '" + amoxicillin.getName() + "'");
+            statement.executeUpdate("UPDATE medicines SET quantity = " + paracetamol.getQuantity() + " WHERE name = '" + paracetamol.getName() + "'");
+
+            
+            statement.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (StockShortageException e) {
+            System.out.println("Stock Shortage Exception: " + e.getMessage());
+        }
+    }
+}

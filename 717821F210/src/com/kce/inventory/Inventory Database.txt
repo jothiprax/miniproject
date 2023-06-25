@@ -1,0 +1,35 @@
+create table Product (productid number (5), productcode varchar(5), productname varchar(20), costprice number(10), sellprice number(10))
+
+create table Stock (productname varchar(20), quantity number(5))
+
+create table Customer (customerid number(3), customername varchar(20), location varchar(10), phone number(10))
+
+create table Salesinfo(productid number (5), productname varchar(20), quantity number(5), totalcost number(10))
+
+
+insert into Product values (101, 'DLAP', 'Laptop', 50000, 60000); 
+insert into Product values (102, 'MOB', 'Mobile', 10000, 15000)
+insert into Product values (103, 'SWAT', 'Smart Watch', 5000, 7000)
+insert into Product values (104, 'BUD', 'Airpods',1000,1500)
+insert into Product values (105, 'CAM', 'Camera', 10000, 15000)
+
+
+insert into Stock values ('Laptop',25)
+insert into Stock values('Mobile',50)
+insert into Stock values ('Smart Watch',100)
+insert into Stock values ('Aripods',75)
+insert into Stock values ('Camera',18)
+
+insert into Customer values (011, 'Kumar', 'Chennai', 7896321457)
+insert into Customer values (034, 'Ajay', 'Coimbatore',4563217890)
+insert into Customer values (022, 'Ravi', 'Thanjavur',9632145875)
+insert into Customer values (012, 'Thiru', 'Madurai', 8524567319)
+insert into Customer values (07, 'Santhosh', 'Trichy', 7412365478)
+insert into Customer values (084, 'Bala', 'Kumbakonam', 6543218529)
+insert into Customer values (043, 'Vikesh', 'Karur',9517534562)
+
+
+insert into Salesinfo values (105, 'Camera', 2, 30000)
+insert into Salesinfo values (103, 'Smart Watch',1,7000)
+insert into Salesinfo values (101, 'Laptop',1,60000) 
+insert into Salesinfo values (104, 'Airpods',4,6000)
