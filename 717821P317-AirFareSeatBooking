@@ -1,0 +1,64 @@
+import java.sql.*;
+import java.util.ArrayList;
+
+public class AirfareSeatReservation {
+
+    public static void main(String[] args) throws SQLException {
+        // Create a connection to the database
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/airline_reservation", "root", "");
+
+        // Create an ArrayList to store the reservations
+        ArrayList<Airfare> reservations = new ArrayList<>();
+
+        // Insert a new record into the database
+        String sql = "INSERT INTO airfare_seat_reservation (flight_id, seat_number, passenger_name) VALUES (1, 10A, 'John Doe')";
+        statement.executeUpdate(sql);
+
+        // Select all records from the database
+        sql = "SELECT * FROM airfare_seat_reservation";
+        ResultSet resultSet = statement.executeQuery(sql);
+
+        // Iterate through the results
+        while (resultSet.next()) {
+            int flightId = resultSet.getInt("flight_id");
+            String seatNumber = resultSet.getString("seat_number");
+            String passengerName = resultSet.getString("passenger_name");
+
+            // Create a new Airfare object
+            Airfare airfare = new Airfare(flightId, seatNumber, passengerName);
+
+            // Add the new Airfare object to the ArrayList
+            reservations.add(airfare);
+        }
+
+        // Print the list of reservations
+        for (Airfare airfare : reservations) {
+            System.out.println(airfare);
+        }
+
+        // Close the connection
+        connection.close();
+    }
+}
+
+class Airfare {
+
+    private int flightId;
+    private String seatNumber;
+    private String passengerName;
+
+    public Airfare(int flightId, String seatNumber, String passengerName) {
+        this.flightId = flightId;
+        this.seatNumber = seatNumber;
+        this.passengerName = passengerName;
+    }
+
+    @Override
+    public String toString() {
+        return "Airfare{" +
+                "flightId=" + flightId +
+                ", seatNumber='" + seatNumber + '\'' +
+                ", passengerName='" + passengerName + '\'' +
+                '}';
+    }
+}
