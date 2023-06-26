@@ -2,7 +2,7 @@ import java.sql.*;
 
 public class ElearningManagementSystem {
 
-    private static final String DB_URL = "jdbc:mysql://@localhost:1521:xe";
+    private static final String DB_URL = "jdbc:oracle://@localhost:1521:xe";
     private static final String DB_USER = "elearning";
     private static final String DB_PASSWORD = "18092003";
 
