@@ -28,7 +28,7 @@ try
       
 conn =
 	DriverManager.getConnection ("jdbc:mysql://localhost:3306/Ecommerce",
-				     "root", "Manick@14");
+				     "root", "Admin@14");
     
 } catch (SQLException e1)
     {
