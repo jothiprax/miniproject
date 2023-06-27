@@ -1,0 +1,6 @@
+=================Employeee Management=======
+Employee: 55 Name: naresh Salary: 700000.0
+=================Employeee Management=======
+=================Employeee Management=======
+Employee: 55 Name: NARESHG Salary: 7000000.0
+=================Customer Management=======
