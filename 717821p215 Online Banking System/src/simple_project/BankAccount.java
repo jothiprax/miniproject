@@ -1,8 +1,10 @@
 package simple_project;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 class BankAccount 
 {
@@ -38,14 +40,22 @@ class BankAccount
         System.out.println("Account Holder: " + accountHolder);
         System.out.println("Balance: " + balance);
     }
-public void saveAccount(Connection connection) throws SQLException {
+public void saveAccount() throws SQLException 
+{
+	try {
+	Connection connection1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/accounts", "root", "pass");
     String query = "INSERT INTO accounts (account_number, account_holder, balance) VALUES (?, ?, ?)";
-    PreparedStatement statement = connection.prepareStatement(query);
+    PreparedStatement statement = connection1.prepareStatement(query);
     statement.setString(1, accountNumber);
     statement.setString(2, accountHolder);
     statement.setDouble(3, balance);
     statement.executeUpdate();
     statement.close();
     System.out.println("Account information saved to the database.");
+	}
+	catch(Exception e)
+	{
+		System.out.println(e);
+	}
 }
 }
