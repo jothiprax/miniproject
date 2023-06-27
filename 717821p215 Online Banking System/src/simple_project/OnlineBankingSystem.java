@@ -5,83 +5,35 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Scanner;
 
 //Main class
-public class OnlineBankingSystem extends BankAccount
+public class OnlineBankingSystem
 {
- public OnlineBankingSystem(String accountNumber, String accountHolder, double balance) {
-		super(accountNumber, accountHolder, balance);
-		// TODO Auto-generated constructor stub
-	}
-
-public static void main(String[] args) 
- {
-     try 
+public static void main(String[] args) throws SQLException 
+{
+	Scanner sc=new Scanner(System.in);
+	System.out.println("1.Insert the Details:");
+	System.out.println("2.Retrive the details:");
+     int option=sc.nextInt();
+     if(option==1) 
      {
-         // Create a CheckingAccount object
-         CheckingAccount checkingAccount = new CheckingAccount("1234567890", "John Doe", 1000.0, 500.0);
-         checkingAccount.displayAccountInfo();
-
-         // Withdraw from the account
-         checkingAccount.withdraw(1500.0);
-
-         // Create a SavingsAccount object
-         SavingsAccount savingsAccount = new SavingsAccount("0987654321", "Jane Smith", 5000.0, 2.5);
-         savingsAccount.displayAccountInfo();
-
-         // Apply interest to the account
-         savingsAccount.applyInterest();
-
-         // Deposit into the account
-         savingsAccount.deposit(1000.0);
-
-         // Withdraw from the account
-         savingsAccount.withdraw(3000.0);
-
-         // Display the updated account information
-         savingsAccount.displayAccountInfo();
-     } 
-     catch (InsufficientFundsException e) 
+    	 System.out.println("Enter The acccount number:");
+    	 String acno=sc.next();
+    	 System.out.println("Enter the Name:");
+    	 String ah=sc.next();
+    	 System.out.println("Enter the balance:");
+    	 double bal=sc.nextDouble();
+    	 BankAccount ba=new BankAccount(acno,ah,bal);
+    	 ba.saveAccount();
+     }
+     else //option==2
      {
-         System.out.println(e);
+    	 Result r=new Result();
+    	 System.out.println("The Details:");
+    	 r.printResult();
      }
-     try {
-         Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "username", "password");
-         Statement statement = connection.createStatement();
-
-         // Create accounts table if it doesn't exist
-         statement.execute("CREATE TABLE IF NOT EXISTS accounts (account_number VARCHAR(10) PRIMARY KEY, account_holder VARCHAR(100), balance DOUBLE)");
-
-         // Create a CheckingAccount object
-         CheckingAccount checkingAccount = new CheckingAccount("1234567890", "John Doe", 1000.0, 500.0);
-         checkingAccount.displayAccountInfo();
-         checkingAccount.saveAccount(connection);
-
-         // Withdraw from the account
-         checkingAccount.withdraw(1500.0);
-
-         // Create a SavingsAccount object
-         SavingsAccount savingsAccount = new SavingsAccount("0987654321", "Jane Smith", 5000.0, 2.5);
-         savingsAccount.displayAccountInfo();
-         savingsAccount.saveAccount(connection);
-
-         // Apply interest to the account
-         savingsAccount.applyInterest();
-
-         // Deposit into the account
-         savingsAccount.deposit(1000.0);
-
-         // Withdraw from the account
-         savingsAccount.withdraw(3000.0);
-
-         // Display the updated account information
-         savingsAccount.displayAccountInfo();
-
-         statement.close();
-         connection.close();
-     } catch (SQLException | InsufficientFundsException e) {
-         e.printStackTrace();
-     }
+     
 
  }
 }
