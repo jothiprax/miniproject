@@ -1,0 +1,237 @@
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+class Student {
+    private String name;
+    private int rollNumber;
+    private String className;
+    private Map<String, Boolean> attendance;
+
+    public Student(String name, int rollNumber, String className) {
+        this.name = name;
+        this.rollNumber = rollNumber;
+        this.className = className;
+        this.attendance = new HashMap<>();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getRollNumber() {
+        return rollNumber;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public Map<String, Boolean> getAttendance() {
+        return attendance;
+    }
+}
+
+class AttendanceManagementSystem {
+    private Map<Integer, Student> students;
+
+    public AttendanceManagementSystem() {
+        this.students = new HashMap<>();
+    }
+
+    public void addStudent(Student student) {
+        students.put(student.getRollNumber(), student);
+    }
+
+    public void markAttendance(int rollNumber, String date, boolean isPresent) {
+        Student student = students.get(rollNumber);
+        if (student != null) {
+            student.getAttendance().put(date, isPresent);
+            System.out.println("Attendance marked successfully for student: " + student.getName());
+        } else {
+            System.out.println("Student not found with roll number: " + rollNumber);
+        }
+    }
+
+    public void displayAttendance(int rollNumber) {
+        Student student = students.get(rollNumber);
+        if (student != null) {
+            System.out.println("Attendance record for student: " + student.getName());
+            for (Map.Entry<String, Boolean> entry : student.getAttendance().entrySet()) {
+                System.out.println("Date: " + entry.getKey() + ", Present: " + entry.getValue());
+            }
+        } else {
+            System.out.println("Student not found with roll number: " + rollNumber);
+        }
+    }
+
+    public void calculateAttendancePercentage(int rollNumber) {
+        Student student = students.get(rollNumber);
+        if (student != null) {
+            int totalDays = student.getAttendance().size();
+            int presentDays = 0;
+            for (Boolean isPresent : student.getAttendance().values()) {
+                if (isPresent) {
+                    presentDays++;
+                }
+            }
+            double attendancePercentage = (double) presentDays / totalDays * 100;
+            System.out.println("Attendance percentage for student " + student.getName() + ": " + attendancePercentage + "%");
+        } else {
+            System.out.println("Student not found with roll number: " + rollNumber);
+        }
+    }
+
+    public void generateAttendanceReport(String date) {
+        int presentCount = 0;
+        int absentCount = 0;
+        for (Student student : students.values()) {
+            if (student.getAttendance().containsKey(date)) {
+                if (student.getAttendance().get(date)) {
+                    presentCount++;
+                } else {
+                    absentCount++;
+                }
+            }
+        }
+        System.out.println("Attendance report for date: " + date);
+        System.out.println("Present count: " + presentCount);
+        System.out.println("Absent count: " + absentCount);
+    }
+
+    public void searchStudent(String keyword) {
+        boolean found = false;
+        for (Student student : students.values()) {
+            if (student.getName().equalsIgnoreCase(keyword) || String.valueOf(student.getRollNumber()).equals(keyword)) {
+                System.out.println("Student found:");
+                System.out.println("Name: " + student.getName());
+                System.out.println("Roll Number: " + student.getRollNumber());
+                System.out.println("Class: " + student.getClassName());
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            System.out.println("No student found with the given keyword: " + keyword);
+        }
+    }
+
+    public void editStudent(int rollNumber, String newName) {
+        Student student = students.get(rollNumber);
+        if (student != null) {
+            student.setName(newName);
+            System.out.println("Student details updated successfully for roll number: " + rollNumber);
+        } else {
+            System.out.println("Student not found with roll number: " + rollNumber);
+        }
+    }
+
+    public void deleteStudent(int rollNumber) {
+        Student student = students.remove(rollNumber);
+        if (student != null) {
+            System.out.println("Student deleted successfully: " + student.getName());
+        } else {
+            System.out.println("Student not found with roll number: " + rollNumber);
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        AttendanceManagementSystem ams = new AttendanceManagementSystem();
+
+        // Adding sample students
+        Student student1 = new Student("John", 101, "Class A");
+        Student student2 = new Student("Emma", 102, "Class B");
+        ams.addStudent(student1);
+        ams.addStudent(student2);
+
+        boolean exit = false;
+        while (!exit) {
+            System.out.println("**** School Attendance Management System ****");
+            System.out.println("1. Add Student");
+            System.out.println("2. Mark Attendance");
+            System.out.println("3. Display Attendance Record");
+            System.out.println("4. Calculate Attendance Percentage");
+            System.out.println("5. Generate Attendance Report");
+            System.out.println("6. Search Student");
+            System.out.println("7. Edit Student Details");
+            System.out.println("8. Delete Student");
+            System.out.println("9. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter student name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Enter roll number: ");
+                    int rollNumber = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    System.out.print("Enter class name: ");
+                    String className = scanner.nextLine();
+                    Student student = new Student(name, rollNumber, className);
+                    ams.addStudent(student);
+                    System.out.println("Student added successfully!");
+                    break;
+                case 2:
+                    System.out.print("Enter student roll number: ");
+                    rollNumber = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    System.out.print("Enter date (DD-MM-YYYY): ");
+                    String date = scanner.nextLine();
+                    System.out.print("Is student present? (true/false): ");
+                    boolean isPresent = scanner.nextBoolean();
+                    ams.markAttendance(rollNumber, date, isPresent);
+                    break;
+                case 3:
+                    System.out.print("Enter student roll number: ");
+                    rollNumber = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    ams.displayAttendance(rollNumber);
+                    break;
+                case 4:
+                    System.out.print("Enter student roll number: ");
+                    rollNumber = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    ams.calculateAttendancePercentage(rollNumber);
+                    break;
+                case 5:
+                    System.out.print("Enter date (DD-MM-YYYY): ");
+                    date = scanner.nextLine();
+                    ams.generateAttendanceReport(date);
+                    break;
+                case 6:
+                    System.out.print("Enter keyword (name/roll number): ");
+                    String keyword = scanner.nextLine();
+                    ams.searchStudent(keyword);
+                    break;
+                case 7:
+                    System.out.print("Enter student roll number: ");
+                    rollNumber = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    System.out.print("Enter new name: ");
+                    String newName = scanner.nextLine();
+                    ams.editStudent(rollNumber, newName);
+                    break;
+                case 8:
+                    System.out.print("Enter student roll number: ");
+                    rollNumber = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    ams.deleteStudent(rollNumber);
+                    break;
+                case 9:
+                    exit = true;
+                    break;
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+            }
+
+            System.out.println();
+        }
+
+        System.out.println("Thank you for using the School Attendance Management System!");
+    }
+}
